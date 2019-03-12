@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name=".deps">
+      </df>
+      <df name="aes">
+        <df name=".deps">
+        </df>
+        <in>aes.c</in>
+        <in>aes.h</in>
+        <in>test.c</in>
+      </df>
+      <df name="autom4te.cache">
+      </df>
+      <df name="inc">
+        <in>parson.h</in>
+      </df>
+      <df name="libloragw">
+        <df name="inc">
+          <in>config.h</in>
+          <in>loragw_aux.h</in>
+          <in>loragw_fpga.h</in>
+          <in>loragw_gps.h</in>
+          <in>loragw_hal.h</in>
+          <in>loragw_lbt.h</in>
+          <in>loragw_radio.h</in>
+          <in>loragw_reg.h</in>
+          <in>loragw_spi.h</in>
+          <in>loragw_sx125x.h</in>
+          <in>loragw_sx1272_fsk.h</in>
+          <in>loragw_sx1272_lora.h</in>
+          <in>loragw_sx1276_fsk.h</in>
+          <in>loragw_sx1276_lora.h</in>
+        </df>
+        <df name="obj">
+        </df>
+        <df name="src">
+          <in>agc_fw.var</in>
+          <in>arb_fw.var</in>
+          <in>cal_fw.var</in>
+          <in>loragw_aux.c</in>
+          <in>loragw_fpga.c</in>
+          <in>loragw_gps.c</in>
+          <in>loragw_hal.c</in>
+          <in>loragw_lbt.c</in>
+          <in>loragw_radio.c</in>
+          <in>loragw_reg.c</in>
+          <in>loragw_spi.native.c</in>
+        </df>
+        <df name="tst">
+          <in>test_loragw_cal.c</in>
+          <in>test_loragw_gps.c</in>
+          <in>test_loragw_hal.c</in>
+          <in>test_loragw_reg.c</in>
+          <in>test_loragw_spi.c</in>
+        </df>
+      </df>
+      <df name="m4">
+      </df>
+      <df name="obj">
+      </df>
+      <df name="src">
+        <in>parson.c</in>
+        <in>util_pkt_logger.c</in>
+      </df>
+      <in>Makefile</in>
+      <in>config.h</in>
+      <in>detection_example.c</in>
+      <in>device_list.c</in>
+      <in>device_list.h</in>
+      <in>fields.c</in>
+      <in>fields.h</in>
+      <in>lora_logger_module.c</in>
+      <in>lora_packet.c</in>
+      <in>lora_packet.h</in>
+      <in>packet.c</in>
+      <in>packet.h</in>
+      <in>parson.c</in>
+      <in>parson.h</in>
+      <in>util_pkt_logger.c</in>
+      <in>util_pkt_logger_cesnet.c</in>
+    </df>
+    <itemPath>../../NetBeans/CppTEST/util_pkt_logger.c</itemPath>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v </runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket,u:reporter -v</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -a test</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 1</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 0.1 -lssl -lcrypto</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 0.1</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

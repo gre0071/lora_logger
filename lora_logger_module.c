@@ -519,6 +519,29 @@ int main(int argc, char **argv) {
     char fetch_timestamp[30];
     struct tm * x;
 
+    /* parse command line options */
+    //    while ((i = getopt (argc, argv, "hr:")) != -1) {
+    //        switch (i) {
+    //            case 'h':
+    //                usage();
+    //                return EXIT_FAILURE;
+    //                break;
+    //
+    //            case 'r':
+    //                log_rotate_interval = atoi(optarg);
+    //                if ((log_rotate_interval == 0) || (log_rotate_interval < -1)) {
+    //                    MSG( "ERROR: Invalid argument for -r option\n");
+    //                    return EXIT_FAILURE;
+    //                }
+    //                break;
+    //
+    //            default:
+    //                MSG("ERROR: argument parsing use -h option for help\n");
+    //                usage();
+    //                return EXIT_FAILURE;
+    //        }
+    //    }
+
     /** endSection */
 
     /* configure signal handling */
@@ -824,6 +847,78 @@ int main(int argc, char **argv) {
             }
         }
     }
+
+    /** Create Input UniRec templates */
+    //    ur_template_t *in_tmplt = ur_create_input_template(0, "TIMESTAMP,RSSI,PHY_PAYLOAD", NULL);
+    //    if (in_tmplt == NULL) {
+    //        ur_free_template(in_tmplt);
+    //        fprintf(stderr, "Error: Input template could not be created.\n");
+    //        return -1;
+    //    }
+
+    /**  
+     * Main processing loop
+     * Read data from input, process them and write to output  
+     */
+    /*while (!stop) {
+        const void *in_rec;
+        uint16_t in_rec_size;
+
+        /** 
+         * Receive data from input interface 0.
+         * Block if data are not available immediately (unless a timeout is set using trap_ifcctl)
+         */
+        //        ret = TRAP_RECEIVE(0, in_rec, in_rec_size, in_tmplt);
+
+        /** Handle possible errors */
+        //        TRAP_DEFAULT_RECV_ERROR_HANDLING(ret, continue, break);
+
+        /** Initialization physical payload for parsing and reversing octet fields. */
+        //        lr_initialization(ur_get_ptr(in_tmplt, in_rec, F_PHY_PAYLOAD));
+
+        /** Identity message type */
+        //        if (lr_is_join_accept_message()) {
+        //            ur_set_string(out_tmplt, out_rec, F_DEV_ADDR, DevAddr);
+        //        } else if (lr_is_data_message()) {
+        //            ur_set_string(out_tmplt, out_rec, F_DEV_ADDR, DevAddr);
+        //        }
+
+        /** 
+         * DeviceList
+         * Information is retrieved from incoming physical payload (PHYPayload) by parsing 
+         * and revers octets. Each row in DeviceList contains device a BASE_RSSI of 
+         * received message. The device address (DevAddr) is used as the index.
+         */
+
+        /** 
+         * Load last data from Device
+         */
+
+        //        if (pre != NULL) {
+        //            /**
+        //             * Detection change distance
+        //             * The example shows the attacker's identification where the detector is set 
+        //             * to 10% variance. This means that for -119 dBm is variance -11.9 dBm. 
+        //             * The minimum value is -130.9 dBm and maximum -107.1 dBm. An attacker is 
+        //             * therefore detected because it does not fall within the range.
+        //             */
+        //            
+        //            if (!(((pre->BASE_RSSI + variance) <= ur_get(in_tmplt, in_rec, F_RSSI)) && (ur_get(in_tmplt, in_rec, F_RSSI) <= (pre->BASE_RSSI - variance)))) {
+        //                ur_set(out_tmplt, out_rec, F_BASE_RSSI, pre->BASE_RSSI);
+        //                ur_set(out_tmplt, out_rec, F_VARIANCE, va);
+        //                ret = trap_send(0, out_rec, MAX_MSG_SIZE);
+        //
+        //                TRAP_DEFAULT_SEND_ERROR_HANDLING(ret, continue, break);
+        //            }
+        //
+        //        }
+
+        /** 
+         * Free lora_packet and output record
+         */
+       /* lr_free();
+    } */
+
 
     /* **** Cleanup **** */
 
