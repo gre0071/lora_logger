@@ -1,0 +1,11 @@
+/usr/bin/nemea//ur_processor.sh -i ./ -o ./
+/usr/bin/make  all-am
+make[1]: Entering directory '/home/erik/nemea/lora_detector'
+depbase=`echo detection_example.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT detection_example.o -MD -MP -MF $depbase.Tpo -c -o detection_example.o detection_example.c &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo fields.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT fields.o -MD -MP -MF $depbase.Tpo -c -o fields.o fields.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/usr/bin/gcc  -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2   -o detection_example detection_example.o fields.o -lunirec -ltrap -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  -lnemea-common  -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  
+make[1]: Leaving directory '/home/erik/nemea/lora_detector'
