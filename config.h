@@ -59,19 +59,19 @@
 #define HAVE_UNISTD_H 1
 
 /* Name of package */
-#define PACKAGE "lora_logger_module"
+#define PACKAGE "lora_logger"
 
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT "erik.gresak@vsb.cz"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "lora_logger_module"
+#define PACKAGE_NAME "lora_logger"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "lora_logger_module 1.0.0"
+#define PACKAGE_STRING "lora_logger 1.0.0"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "lora_logger_module"
+#define PACKAGE_TARNAME "lora_logger"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

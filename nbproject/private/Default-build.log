@@ -1,11 +1,46 @@
 /usr/bin/nemea//ur_processor.sh -i ./ -o ./
+(CDPATH="${ZSH_VERSION+.}:" && cd . && /bin/bash /home/erik/nemea/lora_logger/missing autoheader)
+rm -f stamp-h1
+touch config.h.in
+cd . && /bin/bash ./config.status config.h
+config.status: creating config.h
+config.status: config.h is unchanged
 /usr/bin/make  all-am
-make[1]: Entering directory '/home/erik/nemea/lora_detector'
-depbase=`echo detection_example.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
-/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT detection_example.o -MD -MP -MF $depbase.Tpo -c -o detection_example.o detection_example.c &&\
+make[1]: Entering directory '/home/erik/nemea/lora_logger'
+depbase=`echo lora_logger_module.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT lora_logger_module.o -MD -MP -MF $depbase.Tpo -c -o lora_logger_module.o lora_logger_module.c &&\
 mv -f $depbase.Tpo $depbase.Po
 depbase=`echo fields.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
 /usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT fields.o -MD -MP -MF $depbase.Tpo -c -o fields.o fields.c &&\
 mv -f $depbase.Tpo $depbase.Po
-/usr/bin/gcc  -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2   -o detection_example detection_example.o fields.o -lunirec -ltrap -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  -lnemea-common  -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  
-make[1]: Leaving directory '/home/erik/nemea/lora_detector'
+depbase=`echo lora_packet.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT lora_packet.o -MD -MP -MF $depbase.Tpo -c -o lora_packet.o lora_packet.c &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo device_list.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT device_list.o -MD -MP -MF $depbase.Tpo -c -o device_list.o device_list.c &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo parson.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT parson.o -MD -MP -MF $depbase.Tpo -c -o parson.o parson.c &&\
+mv -f $depbase.Tpo $depbase.Po
+depbase=`echo aes/aes.o | sed 's|[^/]*$|.deps/&|;s|\.o$||'`;\
+/usr/bin/gcc -DHAVE_CONFIG_H -I.     -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2 -MT aes/aes.o -MD -MP -MF $depbase.Tpo -c -o aes/aes.o aes/aes.c &&\
+mv -f $depbase.Tpo $depbase.Po
+/usr/bin/gcc  -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2   -o lora_logger_module lora_logger_module.o fields.o lora_packet.o device_list.o parson.o aes/aes.o -lunirec -ltrap -lrt -lm -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  -lnemea-common  -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  
+lora_logger_module.o: In function `parse_SX1301_configuration':
+/home/erik/nemea/lora_logger/lora_logger_module.c:161: undefined reference to `lgw_board_setconf'
+/home/erik/nemea/lora_logger/lora_logger_module.c:208: undefined reference to `lgw_rxrf_setconf'
+/home/erik/nemea/lora_logger/lora_logger_module.c:241: undefined reference to `lgw_rxif_setconf'
+/home/erik/nemea/lora_logger/lora_logger_module.c:291: undefined reference to `lgw_rxif_setconf'
+/home/erik/nemea/lora_logger/lora_logger_module.c:325: undefined reference to `lgw_rxif_setconf'
+lora_logger_module.o: In function `usage':
+/home/erik/nemea/lora_logger/lora_logger_module.c:394: undefined reference to `lgw_version_info'
+lora_logger_module.o: In function `main':
+/home/erik/nemea/lora_logger/lora_logger_module.c:582: undefined reference to `lgw_start'
+/home/erik/nemea/lora_logger/lora_logger_module.c:667: undefined reference to `lgw_receive'
+/home/erik/nemea/lora_logger/lora_logger_module.c:946: undefined reference to `lgw_stop'
+collect2: error: ld returned 1 exit status
+Makefile:389: recipe for target 'lora_logger_module' failed
+make[1]: *** [lora_logger_module] Error 1
+make[1]: Leaving directory '/home/erik/nemea/lora_logger'
+Makefile:284: recipe for target 'all' failed
+make: *** [all] Error 2

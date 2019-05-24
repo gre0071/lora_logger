@@ -84,6 +84,10 @@ struct sigaction sigact; /* SIGQUIT&SIGINT&SIGTERM signal handling */
 static int exit_sig = 0; /* 1 -> application terminates cleanly (shut down hardware, close open files, etc) */
 static int quit_sig = 0; /* 1 -> application terminates without shutting down the hardware */
 
+struct counterLOG {
+    int cnt_pkt_log, cnt_bad_pkt_log, cnt_all_pkt_log;
+};
+
 /* configuration variables needed by the application  */
 uint64_t lgwm = 0; /* LoRa gateway MAC address */
 char lgwm_str[17];
@@ -94,11 +98,16 @@ time_t log_start_time;
 FILE * log_file = NULL;
 char log_file_name[64];
 
+/* Default variables for count logger */
+FILE * log_count = NULL;
+struct counterLOG st_counter;
+int cl = 0;
+
 /** Private function declaration */
 static void sig_handler(int sigio);
 int parse_SX1301_configuration(const char * conf_file);
 int parse_gateway_configuration(const char * conf_file);
-void open_log(void);
+void change_log(void);
 void usage(void);
 
 /** Private function definition */
@@ -365,28 +374,32 @@ int parse_gateway_configuration(const char * conf_file) {
     return 0;
 }
 
-void open_log(void) {
-    int i;
-    char iso_date[20];
+void change_log(void) {
+    /* Check module parameter argument for append count logger */
+    if (cl != 1)
+        return;
 
-    strftime(iso_date, ARRAY_SIZE(iso_date), "%Y%m%dT%H%M%SZ", gmtime(&now_time)); /* format yyyymmddThhmmssZ */
-    log_start_time = now_time; /* keep track of when the log was started, for log rotation */
-
-    sprintf(log_file_name, "pktlog_%s_%s.csv", lgwm_str, iso_date);
-    log_file = fopen(log_file_name, "a"); /* create log file, append if file already exist */
-    if (log_file == NULL) {
-        MSG("ERROR: impossible to create log file %s\n", log_file_name);
-        exit(EXIT_FAILURE);
+    MSG("INFO: start count logger....\n");
+    
+    /* Check exist count log file */
+    if ((log_count = fopen("count.log", "rb+")) == NULL) {
+        MSG("INFO: creating count log binary file 'count.log'\n");
+        if ((log_count = fopen("count.log", "wb+")) == NULL){
+            MSG("ERROR: failed to create file\n");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    i = fprintf(log_file, "\"gateway ID\",\"node MAC\",\"UTC timestamp\",\"us count\",\"frequency\",\"RF chain\",\"RX chain\",\"status\",\"size\",\"modulation\",\"bandwidth\",\"datarate\",\"coderate\",\"RSSI\",\"SNR\",\"payload\",\"messageType\",\"AppEUI\",\"DevEUI\",\"DevNonce\",\"MIC\",\"DevAddr\",\"AppNonce\",\"NetID\",\"DLSettings\",\"RxDelay\",\"CFList\",\"PHYPayload\",\"MHDR\",\"MACPayload\",\"FCtrl\",\"FHDR\",\"FCnt\",\"FPort\",\"FRMPayload\",\"FOpts\"\n");
-    if (i < 0) {
-        MSG("ERROR: impossible to write to log file %s\n", log_file_name);
-        exit(EXIT_FAILURE);
-    }
+    /* Read binary file */
+    fread(&st_counter, sizeof (struct counterLOG), 1, log_count);
 
-    MSG("INFO: Now writing to log file %s\n", log_file_name);
-    return;
+    MSG("INFO: reading cnt_pkt_log: %d\tcnt_bad_pkt_log: %d\tcnt_all_pkt_log: %d", st_counter.cnt_pkt_log, st_counter.cnt_bad_pkt_log, st_counter.cnt_all_pkt_log);
+
+    /* Moves the cursor to the start of the file */
+    fseek(log_count, -sizeof (struct counterLOG), SEEK_CUR);
+
+    fwrite(&st_counter, sizeof (struct counterLOG), 1, log_count);
+    fflush(log_count);
 }
 
 /* describe command line options */
@@ -467,7 +480,7 @@ trap_module_info_t *module_info = NULL;
  * Module parameter argument types: int8, int16, int32, int64, uint8, uint16, uint32, uint64, float, string
  */
 #define MODULE_PARAMS(PARAM) \
-    PARAM('a', "variance", "Defines explicit variance, default value 10% (0.1).", required_argument, "double")
+    PARAM('l', "countl", "Defines start log count 1/0 (true/false), default value 0 (false).", required_argument, "int")
 /**
  * To define positional parameter ("param" instead of "-m param" or "--mult param"), use the following definition:
  * PARAM('-', "", "Parameter description", required_argument, "string")
@@ -499,6 +512,10 @@ int main(int argc, char **argv) {
     char buff[3];
     char payload[10000];
 
+    /* packet logger */
+    unsigned long cnt_pkt_log = 0; /* count number packet */
+    unsigned long cnt_bad_pkt_log = 0; /* count number bad packet */
+
     /* clock and log rotation management */
     int log_rotate_interval = 3600; /* by default, rotation every hour */
     int time_check = 0; /* variable used to limit the number of calls to time() function */
@@ -519,29 +536,6 @@ int main(int argc, char **argv) {
     char fetch_timestamp[30];
     struct tm * x;
 
-    /* parse command line options */
-    //    while ((i = getopt (argc, argv, "hr:")) != -1) {
-    //        switch (i) {
-    //            case 'h':
-    //                usage();
-    //                return EXIT_FAILURE;
-    //                break;
-    //
-    //            case 'r':
-    //                log_rotate_interval = atoi(optarg);
-    //                if ((log_rotate_interval == 0) || (log_rotate_interval < -1)) {
-    //                    MSG( "ERROR: Invalid argument for -r option\n");
-    //                    return EXIT_FAILURE;
-    //                }
-    //                break;
-    //
-    //            default:
-    //                MSG("ERROR: argument parsing use -h option for help\n");
-    //                usage();
-    //                return EXIT_FAILURE;
-    //        }
-    //    }
-
     /** endSection */
 
     /* configure signal handling */
@@ -551,6 +545,10 @@ int main(int argc, char **argv) {
     sigaction(SIGQUIT, &sigact, NULL);
     sigaction(SIGINT, &sigact, NULL);
     sigaction(SIGTERM, &sigact, NULL);
+
+    st_counter.cnt_all_pkt_log = 0;
+    st_counter.cnt_bad_pkt_log = 0;
+    st_counter.cnt_pkt_log = 0;
 
     /* configuration files management */
     if (access(debug_conf_fname, R_OK) == 0) {
@@ -590,18 +588,8 @@ int main(int argc, char **argv) {
     /* transform the MAC address into a string */
     sprintf(lgwm_str, "%08X%08X", (uint32_t) (lgwm >> 32), (uint32_t) (lgwm & 0xFFFFFFFF));
 
-    /* opening log file and writing CSV header*/
-    time(&now_time);
-    open_log();
-
-
     int ret;
     signed char opt;
-
-    /** 
-     * Default fields for calculate variance
-     */
-    double va = 0.1;
 
     /* **** TRAP initialization **** */
 
@@ -628,11 +616,11 @@ int main(int argc, char **argv) {
      */
     while ((opt = TRAP_GETOPT(argc, argv, module_getopt_string, long_options)) != -1) {
         switch (opt) {
-            case 'a':
-                sscanf(optarg, "%lf", &va);
-                if ((va >= 0) && (va <= 1))
+            case 'l':
+                sscanf(optarg, "%d", &cl);
+                if ((cl == 0) || (cl == 1))
                     break;
-                trap_fin("Invalid arguments variance 0.0 - 1.0\n");
+                trap_fin("Invalid arguments log count 0 - 1\n");
                 FREE_MODULE_INFO_STRUCT(MODULE_BASIC_INFO, MODULE_PARAMS);
                 return -1;
             default:
@@ -660,8 +648,8 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Error: Memory allocation problem (output record).\n");
         return -1;
     }
-    
-    
+
+
     while ((quit_sig != 1) && (exit_sig != 1) && (!stop)) {
         /* fetch packets */
         nb_pkt = lgw_receive(ARRAY_SIZE(rxpkt), rxpkt);
@@ -681,52 +669,10 @@ int main(int argc, char **argv) {
         for (i = 0; i < nb_pkt; ++i) {
             p = &rxpkt[i];
 
-            /* writing gateway ID */
-            fprintf(log_file, "\"%08X%08X\",", (uint32_t) (lgwm >> 32), (uint32_t) (lgwm & 0xFFFFFFFF));
-
-            /* writing node MAC address */
-            fputs("\"\",", log_file); // TODO: need to parse payload
-
-            /* writing UTC timestamp*/
-            fprintf(log_file, "\"%s\",", fetch_timestamp);
-            // TODO: replace with GPS time when available
-
-            /* writing internal clock */
-            fprintf(log_file, "%10u,", p->count_us);
-
-            /* writing RX frequency */
-            fprintf(log_file, "%10u,", p->freq_hz);
-
-            /* writing RF chain */
-            fprintf(log_file, "%u,", p->rf_chain);
-
-            /* writing RX modem/IF chain */
-            fprintf(log_file, "%2d,", p->if_chain);
-
-            /* writing status */
-            switch (p->status) {
-                case STAT_CRC_OK: fputs("\"CRC_OK\" ,", log_file);
-                    break;
-                case STAT_CRC_BAD: fputs("\"CRC_BAD\",", log_file);
-                    break;
-                case STAT_NO_CRC: fputs("\"NO_CRC\" ,", log_file);
-                    break;
-                case STAT_UNDEFINED: fputs("\"UNDEF\"  ,", log_file);
-                    break;
-                default: fputs("\"ERR\"    ,", log_file);
-            }
-
-            /* writing payload size */
-            fprintf(log_file, "%u,", p->size);
-
-            /* writing modulation */
-            switch (p->modulation) {
-                case MOD_LORA: fputs("\"LORA\",", log_file);
-                    break;
-                case MOD_FSK: fputs("\"FSK\" ,", log_file);
-                    break;
-                default: fputs("\"ERR\" ,", log_file);
-            }
+            /* log counter number */
+            (p->status == 16) ? st_counter.cnt_pkt_log++ : st_counter.cnt_bad_pkt_log++;
+            st_counter.cnt_all_pkt_log = st_counter.cnt_pkt_log + st_counter.cnt_bad_pkt_log;
+            change_log();
 
             /* writing bandwidth */
             uint32_t band_width = -1;
@@ -790,135 +736,34 @@ int main(int argc, char **argv) {
                 default: code_rate = -1;
             }
 
-            /* writing packet RSSI */
-            fprintf(log_file, "%+.0f,", p->rssi);
-
-            /* writing packet average SNR */
-            fprintf(log_file, "%+5.1f,", p->snr);
-
-            /* writing hex-encoded payload (bundled in 32-bit words) */
-            fputs("\"", log_file);
-            for (j = 0; j < p->size; ++j) {
-                if ((j > 0) && (j % 4 == 0)) fputs("-", log_file);
-                fprintf(log_file, "%02X", p->payload[j]);
-            }
-
-	    /* writing payload to char */
-            //payload = (char *) malloc(1000);
-            for(g = 0; g < p->size; ++g){
+            /* writing payload to char */
+            for (g = 0; g < p->size; ++g) {
                 sprintf(buff, "%02X", p->payload[g]);
                 buff[2] = '\0';
                 strcat(payload, buff);
             }
 
             /* end of log file line */
-            fputs("\"\n", log_file);
-            fflush(log_file);
             ++pkt_in_log;
-            
+
             /* set RSSI */
             ur_set(out_tmplt, out_rec, F_BAD_WIDTH, band_width);
             ur_set(out_tmplt, out_rec, F_SIZE, p->size);
             ur_set(out_tmplt, out_rec, F_RSSI, (double) p->rssi);
             ur_set(out_tmplt, out_rec, F_CODE_RATE, code_rate);
-	    ur_set(out_tmplt, out_rec, F_SF, sf);
-	    ur_set(out_tmplt, out_rec, F_TIMESTAMP, time(NULL));
-	    ur_set_string(out_tmplt, out_rec, F_PHY_PAYLOAD, payload);
+            ur_set(out_tmplt, out_rec, F_SF, sf);
+            ur_set(out_tmplt, out_rec, F_TIMESTAMP, time(NULL));
+            ur_set_string(out_tmplt, out_rec, F_PHY_PAYLOAD, payload);
 
-	    //free(payload);
-	    //payload = NULL;
-	    payload[0] = '\0';
+            //free(payload);
+            //payload = NULL;
+            payload[0] = '\0';
 
             /* send data */
             ret = trap_send(0, out_rec, MAX_MSG_SIZE);
             TRAP_DEFAULT_SEND_ERROR_HANDLING(ret, continue, break);
         }
-
-        /* check time and rotate log file if necessary */
-        ++time_check;
-        if (time_check >= 8) {
-            time_check = 0;
-            time(&now_time);
-            if (difftime(now_time, log_start_time) > log_rotate_interval) {
-                fclose(log_file);
-                MSG("INFO: log file %s closed, %lu packet(s) recorded\n", log_file_name, pkt_in_log);
-                pkt_in_log = 0;
-                open_log();
-            }
-        }
     }
-
-    /** Create Input UniRec templates */
-    //    ur_template_t *in_tmplt = ur_create_input_template(0, "TIMESTAMP,RSSI,PHY_PAYLOAD", NULL);
-    //    if (in_tmplt == NULL) {
-    //        ur_free_template(in_tmplt);
-    //        fprintf(stderr, "Error: Input template could not be created.\n");
-    //        return -1;
-    //    }
-
-    /**  
-     * Main processing loop
-     * Read data from input, process them and write to output  
-     */
-    /*while (!stop) {
-        const void *in_rec;
-        uint16_t in_rec_size;
-
-        /** 
-         * Receive data from input interface 0.
-         * Block if data are not available immediately (unless a timeout is set using trap_ifcctl)
-         */
-        //        ret = TRAP_RECEIVE(0, in_rec, in_rec_size, in_tmplt);
-
-        /** Handle possible errors */
-        //        TRAP_DEFAULT_RECV_ERROR_HANDLING(ret, continue, break);
-
-        /** Initialization physical payload for parsing and reversing octet fields. */
-        //        lr_initialization(ur_get_ptr(in_tmplt, in_rec, F_PHY_PAYLOAD));
-
-        /** Identity message type */
-        //        if (lr_is_join_accept_message()) {
-        //            ur_set_string(out_tmplt, out_rec, F_DEV_ADDR, DevAddr);
-        //        } else if (lr_is_data_message()) {
-        //            ur_set_string(out_tmplt, out_rec, F_DEV_ADDR, DevAddr);
-        //        }
-
-        /** 
-         * DeviceList
-         * Information is retrieved from incoming physical payload (PHYPayload) by parsing 
-         * and revers octets. Each row in DeviceList contains device a BASE_RSSI of 
-         * received message. The device address (DevAddr) is used as the index.
-         */
-
-        /** 
-         * Load last data from Device
-         */
-
-        //        if (pre != NULL) {
-        //            /**
-        //             * Detection change distance
-        //             * The example shows the attacker's identification where the detector is set 
-        //             * to 10% variance. This means that for -119 dBm is variance -11.9 dBm. 
-        //             * The minimum value is -130.9 dBm and maximum -107.1 dBm. An attacker is 
-        //             * therefore detected because it does not fall within the range.
-        //             */
-        //            
-        //            if (!(((pre->BASE_RSSI + variance) <= ur_get(in_tmplt, in_rec, F_RSSI)) && (ur_get(in_tmplt, in_rec, F_RSSI) <= (pre->BASE_RSSI - variance)))) {
-        //                ur_set(out_tmplt, out_rec, F_BASE_RSSI, pre->BASE_RSSI);
-        //                ur_set(out_tmplt, out_rec, F_VARIANCE, va);
-        //                ret = trap_send(0, out_rec, MAX_MSG_SIZE);
-        //
-        //                TRAP_DEFAULT_SEND_ERROR_HANDLING(ret, continue, break);
-        //            }
-        //
-        //        }
-
-        /** 
-         * Free lora_packet and output record
-         */
-       /* lr_free();
-    } */
-
 
     /* **** Cleanup **** */
 
@@ -944,8 +789,7 @@ int main(int argc, char **argv) {
      * Free logger 
      */
     i = lgw_stop();
-    fclose(log_file);
-
+    fclose(log_count);
 
     return 0;
 }

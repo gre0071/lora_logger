@@ -2,8 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT([lora_logger_module], [1.0.0], [erik.gresak@vsb.cz])
-AC_CONFIG_SRCDIR([lora_logger_module.c])
+AC_INIT([lora_logger], [1.0.0], [erik.gresak@vsb.cz])
+AC_CONFIG_SRCDIR([lora_logger.c])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([foreign silent-rules subdir-objects])

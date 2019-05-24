@@ -60,10 +60,10 @@ am__make_running_with_option = \
   test $$has_opt = yes
 am__make_dryrun = (target_option=n; $(am__make_running_with_option))
 am__make_keepgoing = (target_option=k; $(am__make_running_with_option))
-pkgdatadir = $(datadir)/lora_logger_module
-pkgincludedir = $(includedir)/lora_logger_module
-pkglibdir = $(libdir)/lora_logger_module
-pkglibexecdir = $(libexecdir)/lora_logger_module
+pkgdatadir = $(datadir)/lora_logger
+pkgincludedir = $(includedir)/lora_logger
+pkglibdir = $(libdir)/lora_logger
+pkglibexecdir = $(libexecdir)/lora_logger
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = lora_logger_module$(EXEEXT)
+bin_PROGRAMS = lora_logger$(EXEEXT)
 DIST_COMMON = $(srcdir)/./aminclude.am $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(srcdir)/config.h.in depcomp compile \
@@ -97,11 +97,11 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_lora_logger_module_OBJECTS = lora_logger_module.$(OBJEXT) \
-	fields.$(OBJEXT) lora_packet.$(OBJEXT) device_list.$(OBJEXT) \
-	parson.$(OBJEXT) aes/aes.$(OBJEXT)
-lora_logger_module_OBJECTS = $(am_lora_logger_module_OBJECTS)
-lora_logger_module_DEPENDENCIES =
+am_lora_logger_OBJECTS = lora_logger.$(OBJEXT) fields.$(OBJEXT) \
+	lora_packet.$(OBJEXT) device_list.$(OBJEXT) parson.$(OBJEXT) \
+	aes/aes.$(OBJEXT)
+lora_logger_OBJECTS = $(am_lora_logger_OBJECTS)
+lora_logger_DEPENDENCIES =
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -130,8 +130,8 @@ AM_V_CCLD = $(am__v_CCLD_$(V))
 am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(lora_logger_module_SOURCES)
-DIST_SOURCES = $(lora_logger_module_SOURCES)
+SOURCES = $(lora_logger_SOURCES)
+DIST_SOURCES = $(lora_logger_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -176,17 +176,17 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /opt/lora_logger_modul/missing aclocal-1.14
+ACLOCAL = ${SHELL} /home/erik/nemea/lora_logger/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /opt/lora_logger_modul/missing autoconf
-AUTOHEADER = ${SHELL} /opt/lora_logger_modul/missing autoheader
-AUTOMAKE = ${SHELL} /opt/lora_logger_modul/missing automake-1.14
+AUTOCONF = ${SHELL} /home/erik/nemea/lora_logger/missing autoconf
+AUTOHEADER = ${SHELL} /home/erik/nemea/lora_logger/missing autoheader
+AUTOMAKE = ${SHELL} /home/erik/nemea/lora_logger/missing automake-1.14
 AWK = gawk
-CC = gcc
+CC = /usr/bin/gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g -O2
-CPP = gcc -E
+CFLAGS = -I/usr/local/include  -I/usr/local/include  -I/usr/local/include/nemea-common  -I/usr/local/include  -I/usr/local/include  -g3 -gdwarf-2
+CPP = /usr/bin/gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
@@ -204,16 +204,16 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS =      
 LIBOBJS = 
-LIBS = -lunirec  -L/usr/local/lib -lrt -ltrap  -lnemea-common  -lunirec  -L/usr/local/lib -lrt -ltrap  
+LIBS = -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  -lnemea-common  -lunirec  -L/usr/local/lib -lssl -lcrypto -lrt -ltrap  
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /opt/lora_logger_modul/missing makeinfo
+MAKEINFO = ${SHELL} /home/erik/nemea/lora_logger/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
-PACKAGE = lora_logger_module
+PACKAGE = lora_logger
 PACKAGE_BUGREPORT = erik.gresak@vsb.cz
-PACKAGE_NAME = lora_logger_module
-PACKAGE_STRING = lora_logger_module 1.0.0
-PACKAGE_TARNAME = lora_logger_module
+PACKAGE_NAME = lora_logger
+PACKAGE_STRING = lora_logger 1.0.0
+PACKAGE_TARNAME = lora_logger
 PACKAGE_URL = 
 PACKAGE_VERSION = 1.0.0
 PATH_SEPARATOR = :
@@ -227,11 +227,11 @@ UNIRECPROC = /usr/bin/nemea//ur_processor.sh
 UNIREC_INCLUDE = 
 UNIREC_LTLIB = 
 VERSION = 1.0.0
-abs_builddir = /opt/lora_logger_modul
-abs_srcdir = /opt/lora_logger_modul
-abs_top_builddir = /opt/lora_logger_modul
-abs_top_srcdir = /opt/lora_logger_modul
-ac_ct_CC = gcc
+abs_builddir = /home/erik/nemea/lora_logger
+abs_srcdir = /home/erik/nemea/lora_logger
+abs_top_builddir = /home/erik/nemea/lora_logger
+abs_top_srcdir = /home/erik/nemea/lora_logger
+ac_ct_CC = /usr/bin/gcc
 am__include = include
 am__leading_dot = .
 am__quote = 
@@ -249,11 +249,11 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /opt/lora_logger_modul/install-sh
+install_sh = ${SHELL} /home/erik/nemea/lora_logger/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 libtrap_CFLAGS = -I/usr/local/include 
-libtrap_LIBS = -L/usr/local/lib -lrt -ltrap 
+libtrap_LIBS = -L/usr/local/lib -lssl -lcrypto -lrt -ltrap 
 localedir = ${datarootdir}/locale
 localstatedir = ${prefix}/var
 mandir = ${datarootdir}/man
@@ -276,8 +276,8 @@ top_srcdir = .
 unirec_CFLAGS = -I/usr/local/include 
 unirec_LIBS = -lunirec 
 ACLOCAL_AMFLAGS = -I m4
-lora_logger_module_SOURCES = lora_logger_module.c fields.c fields.h lora_packet.c lora_packet.h device_list.c device_list.h parson.c parson.h aes/aes.c aes/aes.h
-lora_logger_module_LDADD = -lunirec -ltrap -lrt -lm
+lora_logger_SOURCES = lora_logger.c fields.c fields.h lora_packet.c lora_packet.h device_list.c device_list.h parson.c parson.h aes/aes.c aes/aes.h
+lora_logger_LDADD = -lunirec -ltrap -lrt -lm
 BUILT_SOURCES = fields.h fields.c
 CLEANFILES = fields.c fields.h
 all: $(BUILT_SOURCES) config.h
@@ -385,9 +385,9 @@ aes/$(DEPDIR)/$(am__dirstamp):
 	@: > aes/$(DEPDIR)/$(am__dirstamp)
 aes/aes.$(OBJEXT): aes/$(am__dirstamp) aes/$(DEPDIR)/$(am__dirstamp)
 
-lora_logger_module$(EXEEXT): $(lora_logger_module_OBJECTS) $(lora_logger_module_DEPENDENCIES) $(EXTRA_lora_logger_module_DEPENDENCIES) 
-	@rm -f lora_logger_module$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(lora_logger_module_OBJECTS) $(lora_logger_module_LDADD) -L./libloragw -lloragw $(LIBS)
+lora_logger$(EXEEXT): $(lora_logger_OBJECTS) $(lora_logger_DEPENDENCIES) $(EXTRA_lora_logger_DEPENDENCIES) 
+	@rm -f lora_logger$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lora_logger_OBJECTS) $(lora_logger_LDADD) -L./libloragw -lloragw $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -398,7 +398,7 @@ distclean-compile:
 
 include ./$(DEPDIR)/device_list.Po
 include ./$(DEPDIR)/fields.Po
-include ./$(DEPDIR)/lora_logger_module.Po
+include ./$(DEPDIR)/lora_logger.Po
 include ./$(DEPDIR)/lora_packet.Po
 include ./$(DEPDIR)/parson.Po
 include aes/$(DEPDIR)/aes.Po

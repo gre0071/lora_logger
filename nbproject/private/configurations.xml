@@ -64,14 +64,12 @@
         <in>parson.c</in>
         <in>util_pkt_logger.c</in>
       </df>
-      <in>Makefile</in>
       <in>config.h</in>
-      <in>detection_example.c</in>
       <in>device_list.c</in>
       <in>device_list.h</in>
       <in>fields.c</in>
       <in>fields.h</in>
-      <in>lora_logger_module.c</in>
+      <in>lora_logger.c</in>
       <in>lora_packet.c</in>
       <in>lora_packet.h</in>
       <in>packet.c</in>
@@ -81,7 +79,6 @@
       <in>util_pkt_logger.c</in>
       <in>util_pkt_logger_cesnet.c</in>
     </df>
-    <itemPath>../../NetBeans/CppTEST/util_pkt_logger.c</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -120,15 +117,8 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v </runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket,u:reporter -v</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -a test</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 1</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 0.1 -lssl -lcrypto</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v -d 0.1</runcommandpicklistitem>
-          <runcommandpicklistitem>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" -i u:mysocket,u:nextsocket -v</runcommand>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
         <rundir>.</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>

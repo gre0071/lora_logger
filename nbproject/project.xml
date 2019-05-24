@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.cnd.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>lora_logger_module</name>
+            <name>lora_logger</name>
             <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h,var</header-extensions>

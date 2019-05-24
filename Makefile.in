@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = lora_logger_module$(EXEEXT)
+bin_PROGRAMS = lora_logger$(EXEEXT)
 DIST_COMMON = $(srcdir)/./aminclude.am $(srcdir)/Makefile.in \
 	$(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(srcdir)/config.h.in depcomp compile \
@@ -97,11 +97,11 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_lora_logger_module_OBJECTS = lora_logger_module.$(OBJEXT) \
-	fields.$(OBJEXT) lora_packet.$(OBJEXT) device_list.$(OBJEXT) \
-	parson.$(OBJEXT) aes/aes.$(OBJEXT)
-lora_logger_module_OBJECTS = $(am_lora_logger_module_OBJECTS)
-lora_logger_module_DEPENDENCIES =
+am_lora_logger_OBJECTS = lora_logger.$(OBJEXT) fields.$(OBJEXT) \
+	lora_packet.$(OBJEXT) device_list.$(OBJEXT) parson.$(OBJEXT) \
+	aes/aes.$(OBJEXT)
+lora_logger_OBJECTS = $(am_lora_logger_OBJECTS)
+lora_logger_DEPENDENCIES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -130,8 +130,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(lora_logger_module_SOURCES)
-DIST_SOURCES = $(lora_logger_module_SOURCES)
+SOURCES = $(lora_logger_SOURCES)
+DIST_SOURCES = $(lora_logger_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -276,8 +276,8 @@ top_srcdir = @top_srcdir@
 unirec_CFLAGS = @unirec_CFLAGS@
 unirec_LIBS = @unirec_LIBS@
 ACLOCAL_AMFLAGS = -I m4
-lora_logger_module_SOURCES = lora_logger_module.c fields.c fields.h lora_packet.c lora_packet.h device_list.c device_list.h parson.c parson.h aes/aes.c aes/aes.h
-lora_logger_module_LDADD = -lunirec -ltrap -lrt -lm
+lora_logger_SOURCES = lora_logger.c fields.c fields.h lora_packet.c lora_packet.h device_list.c device_list.h parson.c parson.h aes/aes.c aes/aes.h
+lora_logger_LDADD = -lunirec -ltrap -lrt -lm
 BUILT_SOURCES = fields.h fields.c
 CLEANFILES = fields.c fields.h
 all: $(BUILT_SOURCES) config.h
@@ -385,9 +385,9 @@ aes/$(DEPDIR)/$(am__dirstamp):
 	@: > aes/$(DEPDIR)/$(am__dirstamp)
 aes/aes.$(OBJEXT): aes/$(am__dirstamp) aes/$(DEPDIR)/$(am__dirstamp)
 
-lora_logger_module$(EXEEXT): $(lora_logger_module_OBJECTS) $(lora_logger_module_DEPENDENCIES) $(EXTRA_lora_logger_module_DEPENDENCIES) 
-	@rm -f lora_logger_module$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(lora_logger_module_OBJECTS) $(lora_logger_module_LDADD) -L./libloragw -lloragw $(LIBS)
+lora_logger$(EXEEXT): $(lora_logger_OBJECTS) $(lora_logger_DEPENDENCIES) $(EXTRA_lora_logger_DEPENDENCIES) 
+	@rm -f lora_logger$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lora_logger_OBJECTS) $(lora_logger_LDADD) -L./libloragw -lloragw $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -398,7 +398,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/device_list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fields.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lora_logger_module.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lora_logger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lora_packet.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parson.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@aes/$(DEPDIR)/aes.Po@am__quote@

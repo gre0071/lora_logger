@@ -1,5 +1,5 @@
 called: /usr/bin/gcc
-	/home/erik/nemea/lora_detector
+	/home/erik/nemea/lora_logger
 	/usr/bin/gcc
 	-DHAVE_CONFIG_H
 	-I.
@@ -11,18 +11,18 @@ called: /usr/bin/gcc
 	-g3
 	-gdwarf-2
 	-MT
-	detection_example.o
+	lora_logger_module.o
 	-MD
 	-MP
 	-MF
-	.deps/detection_example.Tpo
+	.deps/lora_logger_module.Tpo
 	-c
 	-o
-	detection_example.o
-	detection_example.c
+	lora_logger_module.o
+	lora_logger_module.c
 
 called: /usr/bin/gcc
-	/home/erik/nemea/lora_detector
+	/home/erik/nemea/lora_logger
 	/usr/bin/gcc
 	-DHAVE_CONFIG_H
 	-I.
@@ -45,7 +45,99 @@ called: /usr/bin/gcc
 	fields.c
 
 called: /usr/bin/gcc
-	/home/erik/nemea/lora_detector
+	/home/erik/nemea/lora_logger
+	/usr/bin/gcc
+	-DHAVE_CONFIG_H
+	-I.
+	-I/usr/local/include
+	-I/usr/local/include
+	-I/usr/local/include/nemea-common
+	-I/usr/local/include
+	-I/usr/local/include
+	-g3
+	-gdwarf-2
+	-MT
+	lora_packet.o
+	-MD
+	-MP
+	-MF
+	.deps/lora_packet.Tpo
+	-c
+	-o
+	lora_packet.o
+	lora_packet.c
+
+called: /usr/bin/gcc
+	/home/erik/nemea/lora_logger
+	/usr/bin/gcc
+	-DHAVE_CONFIG_H
+	-I.
+	-I/usr/local/include
+	-I/usr/local/include
+	-I/usr/local/include/nemea-common
+	-I/usr/local/include
+	-I/usr/local/include
+	-g3
+	-gdwarf-2
+	-MT
+	device_list.o
+	-MD
+	-MP
+	-MF
+	.deps/device_list.Tpo
+	-c
+	-o
+	device_list.o
+	device_list.c
+
+called: /usr/bin/gcc
+	/home/erik/nemea/lora_logger
+	/usr/bin/gcc
+	-DHAVE_CONFIG_H
+	-I.
+	-I/usr/local/include
+	-I/usr/local/include
+	-I/usr/local/include/nemea-common
+	-I/usr/local/include
+	-I/usr/local/include
+	-g3
+	-gdwarf-2
+	-MT
+	parson.o
+	-MD
+	-MP
+	-MF
+	.deps/parson.Tpo
+	-c
+	-o
+	parson.o
+	parson.c
+
+called: /usr/bin/gcc
+	/home/erik/nemea/lora_logger
+	/usr/bin/gcc
+	-DHAVE_CONFIG_H
+	-I.
+	-I/usr/local/include
+	-I/usr/local/include
+	-I/usr/local/include/nemea-common
+	-I/usr/local/include
+	-I/usr/local/include
+	-g3
+	-gdwarf-2
+	-MT
+	aes/aes.o
+	-MD
+	-MP
+	-MF
+	aes/.deps/aes.Tpo
+	-c
+	-o
+	aes/aes.o
+	aes/aes.c
+
+called: /usr/bin/gcc
+	/home/erik/nemea/lora_logger
 	/usr/bin/gcc
 	-I/usr/local/include
 	-I/usr/local/include
@@ -55,11 +147,17 @@ called: /usr/bin/gcc
 	-g3
 	-gdwarf-2
 	-o
-	detection_example
-	detection_example.o
+	lora_logger_module
+	lora_logger_module.o
 	fields.o
+	lora_packet.o
+	device_list.o
+	parson.o
+	aes/aes.o
 	-lunirec
 	-ltrap
+	-lrt
+	-lm
 	-lunirec
 	-L/usr/local/lib
 	-lssl
@@ -75,12 +173,12 @@ called: /usr/bin/gcc
 	-ltrap
 
 called: /usr/bin/ld
-	/home/erik/nemea/lora_detector
+	/home/erik/nemea/lora_logger
 	/usr/bin/ld
 	-plugin
 	/usr/lib/gcc/x86_64-linux-gnu/4.9/liblto_plugin.so
 	-plugin-opt=/usr/lib/gcc/x86_64-linux-gnu/4.9/lto-wrapper
-	-plugin-opt=-fresolution=/tmp/cc7Mx4Tf.res
+	-plugin-opt=-fresolution=/tmp/ccgj3CCX.res
 	-plugin-opt=-pass-through=-lgcc
 	-plugin-opt=-pass-through=-lgcc_s
 	-plugin-opt=-pass-through=-lc
@@ -95,7 +193,7 @@ called: /usr/bin/ld
 	-dynamic-linker
 	/lib64/ld-linux-x86-64.so.2
 	-o
-	detection_example
+	lora_logger_module
 	/usr/lib/gcc/x86_64-linux-gnu/4.9/../../../x86_64-linux-gnu/crt1.o
 	/usr/lib/gcc/x86_64-linux-gnu/4.9/../../../x86_64-linux-gnu/crti.o
 	/usr/lib/gcc/x86_64-linux-gnu/4.9/crtbegin.o
@@ -109,10 +207,16 @@ called: /usr/bin/ld
 	-L/usr/lib/x86_64-linux-gnu
 	-L/usr/lib/../lib
 	-L/usr/lib/gcc/x86_64-linux-gnu/4.9/../../..
-	detection_example.o
+	lora_logger_module.o
 	fields.o
+	lora_packet.o
+	device_list.o
+	parson.o
+	aes/aes.o
 	-lunirec
 	-ltrap
+	-lrt
+	-lm
 	-lunirec
 	-lssl
 	-lcrypto
