@@ -379,15 +379,10 @@ void change_log(void) {
     if (cl != 1)
         return;
 
-    MSG("INFO: start count logger....\n");
-    
     /* Check exist count log file */
-    if ((log_count = fopen("count.log", "rb+")) == NULL) {
-        MSG("INFO: creating count log binary file 'count.log'\n");
-        if ((log_count = fopen("count.log", "wb+")) == NULL){
-            MSG("ERROR: failed to create file\n");
-            exit(EXIT_FAILURE);
-        }
+    if ((log_count = fopen("count.log", "wb+")) == NULL) {
+        MSG("ERROR: failed to create file\n");
+        exit(EXIT_FAILURE);
     }
 
     /* Read binary file */
@@ -587,6 +582,11 @@ int main(int argc, char **argv) {
 
     /* transform the MAC address into a string */
     sprintf(lgwm_str, "%08X%08X", (uint32_t) (lgwm >> 32), (uint32_t) (lgwm & 0xFFFFFFFF));
+
+    if (cl == 1) {
+        MSG("INFO: start count logger....\n");
+        MSG("INFO: creating count log binary file 'count.log'\n");
+    }
 
     int ret;
     signed char opt;
