@@ -107,8 +107,12 @@ int cl = 0;
 static void sig_handler(int sigio);
 int parse_SX1301_configuration(const char * conf_file);
 int parse_gateway_configuration(const char * conf_file);
-void change_log(void);
 void usage(void);
+
+/* Logger function declaration */
+void start_log(void);
+void read_log(void);
+void change_log(void);
 
 /** Private function definition */
 static void sig_handler(int sigio) {
@@ -374,33 +378,50 @@ int parse_gateway_configuration(const char * conf_file) {
     return 0;
 }
 
-void change_log(void) {
+void start_log(void) {
     /* Check module parameter argument for append count logger */
     if (cl != 1)
         return;
 
-    if (access("count.log", F_OK) == -1) {
-        st_counter.cnt_all_pkt_log = 0;
-        st_counter.cnt_bad_pkt_log = 0;
-        st_counter.cnt_pkt_log = 0;
-    }
-
     /* Check exist count log file */
-    if ((log_count = fopen("count.log", "wb+")) == NULL) {
-        MSG("ERROR: failed to create file\n");
-        exit(EXIT_FAILURE);
-    }
+    if ((log_count = fopen("count.log", "rb+")) == NULL) {
+        if ((log_count = fopen("count.log", "wb+")) == NULL) {
+            printf("ERROR: failed to create file 'count.log'\n");
+            exit(EXIT_FAILURE);
+        } else
+            printf("INFO: creating count log binary file 'count.log'\n");
+    } else
+        printf("INFO: open count log binary file 'count.log'\n");
+    
+    return;
+}
 
+void read_log(void){
+    /* Check module parameter argument for append count logger */
+    if (cl != 1)
+        return;
+    
     /* Read binary file */
     fread(&st_counter, sizeof (struct counterLOG), 1, log_count);
 
-    MSG("INFO: cnt_pkt_log: %d\tcnt_bad_pkt_log: %d\tcnt_all_pkt_log: %d\n", st_counter.cnt_pkt_log, st_counter.cnt_bad_pkt_log, st_counter.cnt_all_pkt_log);
+    printf("INFO: cnt_pkt_log: %d\tcnt_bad_pkt_log: %d\tcnt_all_pkt_log: %d\n", st_counter.cnt_pkt_log, st_counter.cnt_bad_pkt_log, st_counter.cnt_all_pkt_log);
 
     /* Moves the cursor to the start of the file */
     fseek(log_count, -sizeof (struct counterLOG), SEEK_CUR);
+    
+    return;
+}
 
+void change_log(void) {
+    /* Check module parameter argument for append count logger */
+    if (cl != 1)
+        return;
+    
+    /* Write data to binary file */
     fwrite(&st_counter, sizeof (struct counterLOG), 1, log_count);
     fflush(log_count);
+    
+    return;
 }
 
 /* describe command line options */
@@ -581,10 +602,8 @@ int main(int argc, char **argv) {
     /* transform the MAC address into a string */
     sprintf(lgwm_str, "%08X%08X", (uint32_t) (lgwm >> 32), (uint32_t) (lgwm & 0xFFFFFFFF));
 
-    if (cl == 1) {
-        MSG("INFO: start count logger....\n");
-        MSG("INFO: creating count log binary file 'count.log'\n");
-    }
+    /* Initialization log file */
+    start_log();
 
     int ret;
     signed char opt;
@@ -668,6 +687,7 @@ int main(int argc, char **argv) {
             p = &rxpkt[i];
 
             /* log counter number */
+            read_log();
             (p->status == 16) ? st_counter.cnt_pkt_log++ : st_counter.cnt_bad_pkt_log++;
             st_counter.cnt_all_pkt_log = st_counter.cnt_pkt_log + st_counter.cnt_bad_pkt_log;
             change_log();
