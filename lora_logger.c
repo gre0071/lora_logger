@@ -111,7 +111,6 @@ void usage(void);
 
 /* Logger function declaration */
 void start_log(void);
-void read_log(void);
 void change_log(void);
 
 /** Private function definition */
@@ -378,11 +377,11 @@ int parse_gateway_configuration(const char * conf_file) {
     return 0;
 }
 
-void start_log(void) {
+void start_log(void){
     /* Check module parameter argument for append count logger */
     if (cl != 1)
         return;
-
+    
     /* Check exist count log file */
     if ((log_count = fopen("count.log", "rb+")) == NULL) {
         if ((log_count = fopen("count.log", "wb+")) == NULL) {
@@ -392,14 +391,6 @@ void start_log(void) {
             printf("INFO: creating count log binary file 'count.log'\n");
     } else
         printf("INFO: open count log binary file 'count.log'\n");
-    
-    return;
-}
-
-void read_log(void){
-    /* Check module parameter argument for append count logger */
-    if (cl != 1)
-        return;
     
     /* Read binary file */
     fread(&st_counter, sizeof (struct counterLOG), 1, log_count);
@@ -602,9 +593,6 @@ int main(int argc, char **argv) {
     /* transform the MAC address into a string */
     sprintf(lgwm_str, "%08X%08X", (uint32_t) (lgwm >> 32), (uint32_t) (lgwm & 0xFFFFFFFF));
 
-    /* Initialization log file */
-    start_log();
-
     int ret;
     signed char opt;
 
@@ -687,7 +675,7 @@ int main(int argc, char **argv) {
             p = &rxpkt[i];
 
             /* log counter number */
-            read_log();
+            start_log();
             (p->status == 16) ? st_counter.cnt_pkt_log++ : st_counter.cnt_bad_pkt_log++;
             st_counter.cnt_all_pkt_log = st_counter.cnt_pkt_log + st_counter.cnt_bad_pkt_log;
             change_log();
