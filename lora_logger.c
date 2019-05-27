@@ -389,8 +389,7 @@ void start_log(void){
             exit(EXIT_FAILURE);
         } else
             printf("INFO: creating count log binary file 'count.log'\n");
-    } else
-        printf("INFO: open count log binary file 'count.log'\n");
+    }
     
     /* Read binary file */
     fread(&st_counter, sizeof (struct counterLOG), 1, log_count);
