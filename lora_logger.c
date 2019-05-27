@@ -379,6 +379,12 @@ void change_log(void) {
     if (cl != 1)
         return;
 
+    if (access("count.log", F_OK) == -1) {
+        st_counter.cnt_all_pkt_log = 0;
+        st_counter.cnt_bad_pkt_log = 0;
+        st_counter.cnt_pkt_log = 0;
+    }
+
     /* Check exist count log file */
     if ((log_count = fopen("count.log", "wb+")) == NULL) {
         MSG("ERROR: failed to create file\n");
@@ -388,7 +394,7 @@ void change_log(void) {
     /* Read binary file */
     fread(&st_counter, sizeof (struct counterLOG), 1, log_count);
 
-    MSG("INFO: reading cnt_pkt_log: %d\tcnt_bad_pkt_log: %d\tcnt_all_pkt_log: %d", st_counter.cnt_pkt_log, st_counter.cnt_bad_pkt_log, st_counter.cnt_all_pkt_log);
+    MSG("INFO: cnt_pkt_log: %d\tcnt_bad_pkt_log: %d\tcnt_all_pkt_log: %d\n", st_counter.cnt_pkt_log, st_counter.cnt_bad_pkt_log, st_counter.cnt_all_pkt_log);
 
     /* Moves the cursor to the start of the file */
     fseek(log_count, -sizeof (struct counterLOG), SEEK_CUR);
@@ -507,10 +513,6 @@ int main(int argc, char **argv) {
     char buff[3];
     char payload[10000];
 
-    /* packet logger */
-    unsigned long cnt_pkt_log = 0; /* count number packet */
-    unsigned long cnt_bad_pkt_log = 0; /* count number bad packet */
-
     /* clock and log rotation management */
     int log_rotate_interval = 3600; /* by default, rotation every hour */
     int time_check = 0; /* variable used to limit the number of calls to time() function */
@@ -540,10 +542,6 @@ int main(int argc, char **argv) {
     sigaction(SIGQUIT, &sigact, NULL);
     sigaction(SIGINT, &sigact, NULL);
     sigaction(SIGTERM, &sigact, NULL);
-
-    st_counter.cnt_all_pkt_log = 0;
-    st_counter.cnt_bad_pkt_log = 0;
-    st_counter.cnt_pkt_log = 0;
 
     /* configuration files management */
     if (access(debug_conf_fname, R_OK) == 0) {
